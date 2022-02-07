@@ -72,6 +72,7 @@ steps:
     commands:
       - ./release/linux/amd64/drone-ansible --help
 
+
   - name: docker build and push
     image: plugins/docker
     settings:
@@ -85,6 +86,12 @@ steps:
       repo: docker.nexus.diesel.net/${DRONE_REPO_NAME}
       tags:
         - ${DRONE_BRANCH}-latest
+    commands:
+      - tags.sh $(cat ../VERSION) ) > .tags
+      - cat .tags
+    when:
+      event:
+        - push
 
 depends_on:
   - testing
