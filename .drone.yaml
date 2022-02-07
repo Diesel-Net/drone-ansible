@@ -42,7 +42,7 @@ platform:
 
 steps:
 
-  - name: build
+  - name: go build
     image: 'golang:1.12'
     environment:
       CGO_ENABLED: '0'
@@ -55,13 +55,13 @@ steps:
         exclude:
           - tag
 
-  - name: test entrypoint interface
+  - name: test entrypoint
     image: 'golang:1.12'
     commands:
       - ./release/linux/amd64/drone-ansible --help
 
-  - name: generate tags
-    image: golang:1.14
+  - name: generate docker tags
+    image: bash
     commands:
       - version=''
       - if [ $DRONE_BRANCH = 'development' ]; then version='-development'; fi
