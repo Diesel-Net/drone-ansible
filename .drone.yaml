@@ -61,7 +61,7 @@ steps:
       - ./release/linux/amd64/drone-ansible --help
 
   - name: generate docker tags
-    image: bash
+    image: golang:1.14
     commands:
       - version=''
       - if [ $DRONE_BRANCH = 'development' ]; then version='-development'; fi
