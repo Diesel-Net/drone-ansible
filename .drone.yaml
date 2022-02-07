@@ -80,7 +80,7 @@ steps:
       - echo $version
       #- cat VERSION > .tags
       #- echo ${DRONE_BRANCH}-latest >> .tags
-      - (cd . && ./tags.sh $version $(cat VERSION) ) > .tags
+      - (cd . && tags.sh $version $(cat VERSION) ) > .tags
       - cat .tags
 
 
