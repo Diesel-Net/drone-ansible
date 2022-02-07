@@ -7,28 +7,31 @@ platform:
   arch: amd64
 steps:
 
-  - name: vet
+  - name: go vet
     image: 'golang:1.12'
-    pull: always
     commands:
       - go vet ./...
     volumes:
       - name: gopath
         path: /go
-  - name: test
+
+  - name: go test
     image: 'golang:1.12'
-    pull: always
     commands:
       - go test -cover ./...
     volumes:
       - name: gopath
         path: /go
+
 volumes:
   - name: gopath
     temp: {}
+
 trigger:
-  ref:
-    - refs/heads/development
+  event:
+    - push
+  branch:
+    - development
 ---
 kind: pipeline
 type: docker
@@ -39,9 +42,8 @@ platform:
 
 steps:
 
-  - name: build-push
+  - name: build (push)
     image: 'golang:1.12'
-    pull: always
     environment:
       CGO_ENABLED: '0'
     commands:
@@ -53,9 +55,8 @@ steps:
         exclude:
           - tag
 
-  - name: build-tag
+  - name: build (tag)
     image: 'golang:1.12'
-    pull: always
     environment:
       CGO_ENABLED: '0'
     commands:
@@ -66,17 +67,14 @@ steps:
       event:
         - tag
 
-  - name: executable
+  - name: test executable
     image: 'golang:1.12'
-    pull: always
     commands:
       - ./release/linux/amd64/drone-ansible --help
 
-  - name: publish
+  - name: docker build and push
     image: plugins/docker
-    pull: always
     settings:
-      dry_run: yes
       mirror: dockerhub.nexus.diesel.net
       registry: docker.nexus.diesel.net
       username:
@@ -85,13 +83,14 @@ steps:
         from_secret: nexus_pass
       dockerfile: docker/Dockerfile.linux.amd64
       repo: docker.nexus.diesel.net/${DRONE_REPO_NAME}
+      tags:
+        - ${DRONE_BRANCH}-latest
 
 depends_on:
   - testing
 trigger:
-  ref:
-    - refs/heads/development
-    # - refs/heads/master
-    # - refs/tags/**
-    # - refs/pull/**
+  event:
+    - push
+  branch:
+    - development
 ...
