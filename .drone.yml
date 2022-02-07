@@ -6,6 +6,7 @@ platform:
   os: linux
   arch: amd64
 steps:
+
   - name: vet
     image: 'golang:1.12'
     pull: always
@@ -28,9 +29,6 @@ volumes:
 trigger:
   ref:
     - refs/heads/development
-    # - refs/heads/master
-    # - refs/tags/**
-    # - refs/pull/**
 ---
 kind: pipeline
 type: docker
@@ -38,7 +36,9 @@ name: linux-amd64
 platform:
   os: linux
   arch: amd64
+
 steps:
+
   - name: build-push
     image: 'golang:1.12'
     pull: always
@@ -52,6 +52,7 @@ steps:
       event:
         exclude:
           - tag
+
   - name: build-tag
     image: 'golang:1.12'
     pull: always
@@ -64,42 +65,27 @@ steps:
     when:
       event:
         - tag
+
   - name: executable
     image: 'golang:1.12'
     pull: always
     commands:
       - ./release/linux/amd64/drone-ansible --help
-  - name: dryrun
-    image: plugins/docker
-    pull: always
-    settings:
-      dry_run: true
-      tags: linux-amd64
-      dockerfile: docker/Dockerfile.linux.amd64
-      repo: plugins/ansible
-      username:
-        from_secret: nexus_user
-      password:
-        from_secret: nexus_pass
-    when:
-      event:
-        - pull_request
+
   - name: publish
     image: plugins/docker
     pull: always
     settings:
-      auto_tag: true
-      auto_tag_suffix: linux-amd64
-      dockerfile: docker/Dockerfile.linux.amd64
-      repo: plugins/ansible
+      dry_run: yes
+      mirror: dockerhub.nexus.diesel.net
+      registry: docker.nexus.diesel.net
       username:
         from_secret: nexus_user
       password:
         from_secret: nexus_pass
-    when:
-      event:
-        exclude:
-          - pull_request
+      dockerfile: docker/Dockerfile.linux.amd64
+      repo: docker.nexus.diesel.net/${DRONE_REPO_NAME}
+
 depends_on:
   - testing
 trigger:
