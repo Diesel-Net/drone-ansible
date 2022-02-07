@@ -48,14 +48,10 @@ steps:
       CGO_ENABLED: '0'
     commands:
       - >-
-        go build -v -ldflags "-X main.version=$(cat VERSION)" -a -tags
+        go build -v -ldflags "-X main.version=ansible-community $(cat VERSION)" -a -tags
         netgo -o release/linux/amd64/drone-ansible
-    when:
-      event:
-        exclude:
-          - tag
 
-  - name: test entrypoint
+  - name: drone-ansible --help
     image: 'golang:1.12'
     commands:
       - ./release/linux/amd64/drone-ansible --help
