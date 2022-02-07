@@ -87,7 +87,7 @@ steps:
       tags:
         - ${DRONE_BRANCH}-latest
     commands:
-      - tags.sh $(cat ../VERSION) > .tags
+      - tags.sh $(cat VERSION) > .tags
       - cat .tags
     when:
       event:
