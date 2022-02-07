@@ -77,7 +77,7 @@ steps:
     commands:
       - ls -al
       - cat VERSION > .tags
-      - echo ${DRONE_BRANCH}-latest >> .tags
+      - echo -n ${DRONE_BRANCH}-latest >> .tags
       - cat .tags
 
 
