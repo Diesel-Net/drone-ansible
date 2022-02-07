@@ -69,7 +69,6 @@ steps:
     pull: always
     commands:
       - ./release/linux/amd64/drone-ansible --help
-      - ./release/linux/amd64/drone-ansible --version
   - name: dryrun
     image: plugins/docker
     pull: always
@@ -79,9 +78,9 @@ steps:
       dockerfile: docker/Dockerfile.linux.amd64
       repo: plugins/ansible
       username:
-        from_secret: docker_username
+        from_secret: nexus_user
       password:
-        from_secret: docker_password
+        from_secret: nexus_pass
     when:
       event:
         - pull_request
@@ -94,9 +93,9 @@ steps:
       dockerfile: docker/Dockerfile.linux.amd64
       repo: plugins/ansible
       username:
-        from_secret: docker_username
+        from_secret: nexus_user
       password:
-        from_secret: docker_password
+        from_secret: nexus_pass
     when:
       event:
         exclude:
