@@ -65,8 +65,8 @@ steps:
     commands:
       - version=''
       - if [ $DRONE_BRANCH = 'development' ]; then version='-development'; fi
-      - echo $version-suffix
-      - ./tags.sh $(cat VERSION) $version-suffix > .tags
+      - echo $version
+      - ./tags.sh $(cat VERSION) $version > .tags
 
 
   - name: docker build and push
