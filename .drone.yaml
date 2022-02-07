@@ -42,32 +42,20 @@ platform:
 
 steps:
 
-  - name: build (push)
+  - name: build
     image: 'golang:1.12'
     environment:
       CGO_ENABLED: '0'
     commands:
       - >-
-        go build -v -ldflags "-X main.version=${DRONE_COMMIT_SHA:0:8}" -a -tags
+        go build -v -ldflags "-X main.version=$(cat VERSION)" -a -tags
         netgo -o release/linux/amd64/drone-ansible
     when:
       event:
         exclude:
           - tag
 
-  - name: build (tag)
-    image: 'golang:1.12'
-    environment:
-      CGO_ENABLED: '0'
-    commands:
-      - >-
-        go build -v -ldflags "-X main.version=${DRONE_TAG##v}" -a -tags netgo -o
-        release/linux/amd64/drone-ansible
-    when:
-      event:
-        - tag
-
-  - name: test executable
+  - name: test entrypoint interface
     image: 'golang:1.12'
     commands:
       - ./release/linux/amd64/drone-ansible --help
@@ -77,11 +65,8 @@ steps:
     commands:
       - version=''
       - if [ $DRONE_BRANCH = 'development' ]; then version='-development'; fi
-      - echo $version
-      #- cat VERSION > .tags
-      #- echo ${DRONE_BRANCH}-latest >> .tags
-      - (cd . && ./tags.sh $version $(cat VERSION) ) > .tags
-      - cat .tags
+      - echo $version-suffix
+      - ./tags.sh $(cat VERSION) $version-suffix > .tags
 
 
   - name: docker build and push
@@ -95,8 +80,6 @@ steps:
         from_secret: nexus_pass
       dockerfile: docker/Dockerfile.linux.amd64
       repo: docker.nexus.diesel.net/${DRONE_REPO_NAME}
-      # tags:
-      #   - ${DRONE_BRANCH}-latest
     when:
       event:
         - push
@@ -108,4 +91,5 @@ trigger:
     - push
   branch:
     - development
+    - stable
 ...
