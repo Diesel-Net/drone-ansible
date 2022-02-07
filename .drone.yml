@@ -76,7 +76,7 @@ steps:
     image: golang:1.14
     commands:
       - ls -al
-      - $(cat VERSION) > .tags
+      - cat VERSION > .tags
       - cat .tags
 
 
