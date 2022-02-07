@@ -1,6 +1,6 @@
 [![Build Status](https://drone.kiwi-labs.net/api/badges/Diesel-Net/drone-ansible/status.svg)](https://drone.kiwi-labs.net/Diesel-Net/drone-ansible)
 
-:warning: This is an unofficial fork with the goal of providing an Anible plugin for drone that uses up-to-date versions of `ansible-community`
+:warning: This is an unofficial fork with the goal of providing an Ansible plugin for Drone CI that uses up-to-date versions of `ansible-community`
 
 # drone-ansible
 
