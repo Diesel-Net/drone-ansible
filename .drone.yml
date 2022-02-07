@@ -69,6 +69,7 @@ steps:
     pull: always
     commands:
       - ./release/linux/amd64/drone-ansible --help
+      - ./release/linux/amd64/drone-ansible --version
   - name: dryrun
     image: plugins/docker
     pull: always
