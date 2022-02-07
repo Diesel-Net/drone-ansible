@@ -76,12 +76,10 @@ steps:
         from_secret: nexus_pass
       dockerfile: docker/Dockerfile.linux.amd64
       repo: docker.nexus.diesel.net/${DRONE_REPO_NAME}
-    when:
-      event:
-        - push
 
 depends_on:
   - testing
+
 trigger:
   event:
     - push
