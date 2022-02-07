@@ -88,8 +88,7 @@ steps:
         - ${DRONE_BRANCH}-latest
     commands:
       - ls -al
-      - chmod u+x tags.sh
-      - /drone/src/tags.sh $(cat VERSION) > .tags
+      - $(cat VERSION) > .tags
       - cat .tags
     when:
       event:
